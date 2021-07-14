@@ -5,8 +5,195 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WiseWeather"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="MainWindow" Height="450" Width="600"
+        MinHeight="300" MaxHeight="600"
+        MinWidth="450" MaxWidth="750"
+        ResizeMode="CanResizeWithGrip"
+        WindowStyle ="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        MouseDown="MainWindow_MouseDown"
+        UseLayoutRounding="True">
+    <Window.Resources>
+        <FontFamily x:Key="Font">/Fonts/#Roboto</FontFamily>
+        <!--Custom Solid Brushes for Elements-->
+        <SolidColorBrush x:Key="TextBoxBrush" Color="#01497C"/>
+        <SolidColorBrush x:Key="WeatherBoxBrush" Color="#013A63"/>
+        <SolidColorBrush x:Key="ToolBarBrush" Color="#012A4A"/>
+        <SolidColorBrush x:Key="TimeBoxBrush" Color="#012F50"/>
+
+        <!--Toolbar Button Styles-->
+        <Style x:Key="BaseButtonStyle" TargetType="Button">
+            <Setter Property="SnapsToDevicePixels"
+          Value="true" />
+            <Setter Property="OverridesDefaultStyle"
+          Value="true" />
+        </Style>
+
+        <Style x:Key="ExitButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Rectangle x:Name="ButtonRect" StrokeThickness="0" Fill="{StaticResource ToolBarBrush}"/>
+                            <Image x:Name="ButtonImage" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None">
+                                <Image.Source>
+                                    <BitmapImage  UriSource="/Images/NormalExit.png"/>
+                                </Image.Source>
+                            </Image>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonImage" Property="Source" Value="/Images/HoverExit.png"/>
+                                <Setter TargetName="ButtonRect" Property="Fill" Value="#e63946"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MaximizeButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Rectangle x:Name="ButtonRect" StrokeThickness="0" Fill="{StaticResource ToolBarBrush}"/>
+                            <Image x:Name="ButtonImage" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None">
+                                <Image.Source>
+                                    <BitmapImage  UriSource="/Images/NormalMax.png"/>
+                                </Image.Source>
+                            </Image>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonImage" Property="Source" Value="/Images/HoverMax.png"/>
+                                <Setter TargetName="ButtonRect" Property="Fill" Value="#013A63"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <Style x:Key="MinimizeButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Rectangle x:Name="ButtonRect" StrokeThickness="0" Fill="{StaticResource ToolBarBrush}"/>
+                            <Image x:Name="ButtonImage" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None">
+                                <Image.Source>
+                                    <BitmapImage  UriSource="/Images/NormalMin.png"/>
+                                </Image.Source>
+                            </Image>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonImage" Property="Source" Value="/Images/HoverMin.png"/>
+                                <Setter TargetName="ButtonRect" Property="Fill" Value="#013A63"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+
+
+
+    </Window.Resources>
+    <Grid  >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="17"></RowDefinition>
+            <RowDefinition Height="1.62*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Rectangle Grid.Row="2" Fill="{StaticResource TextBoxBrush}" StrokeThickness ="0"/>
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="18*"/>
+                <RowDefinition Height="70*"/>
+                <RowDefinition Height="20*"/>
+            </Grid.RowDefinitions>
+            <Viewbox HorizontalAlignment="Left" Grid.Row="0">
+                <TextBlock  Text="Quote of The Day:"  FontFamily="Roboto" FontStyle="Italic" FontWeight="Thin" FontSize="20" TextWrapping="Wrap"  Foreground="White" TextAlignment="Left"/>
+            </Viewbox>
+            <Viewbox  Grid.Row="1" Margin="10,0,10,0" HorizontalAlignment="Left">
+                <TextBlock Name="QuoteTextBlock"  Text="{Binding CurrentDay.Quote, UpdateSourceTrigger = PropertyChanged}" FontFamily="Roboto" FontStyle="Italic" FontWeight="Thin" TextWrapping="Wrap"  Foreground="White" />
+            </Viewbox>
+            <Viewbox  Grid.Row="2" Margin="0,0,10,0" HorizontalAlignment="Right">
+                <TextBlock Name="QuoteAuthorTextBlock" Grid.Row="2"  Text="{Binding CurrentDay.QuoteAuthor, UpdateSourceTrigger = PropertyChanged}" FontFamily="Roboto" FontStyle="Italic" FontWeight="Thin"  TextWrapping="Wrap"  Foreground="White"/>
+            </Viewbox>
+        </Grid>
+
+        <Rectangle Name="TopBar" Grid.Row="0" Fill="{StaticResource ToolBarBrush}" StrokeThickness ="0" MouseDown="TopBar_MouseDown"/>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="21" />
+                <ColumnDefinition Width="21" />
+                <ColumnDefinition Width="21" />
+            </Grid.ColumnDefinitions>
+            <Button Name="ExitButton" Grid.Column="3" Height="17" Width="21" HorizontalAlignment="Right" Style="{StaticResource ExitButtonStyle}" Click="ExitButton_Click" />
+            <Button Name="MaximizeButton" Grid.Column="2" Height="17" Width="21" HorizontalAlignment="Right" Style="{StaticResource MaximizeButtonStyle}" Click="MaximizeButton_Click" />
+            <Button Name="MinimizeButton" Grid.Column="1" Height="17" Width="21" HorizontalAlignment="Right" Style="{StaticResource MinimizeButtonStyle}" Click="MinimizeButton_Click"/>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="1.62*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Rectangle Grid.Column="0" Fill="{StaticResource WeatherBoxBrush}" StrokeThickness ="0"/>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="7*"/>
+                    <RowDefinition Height="1.8*"/>
+                    <RowDefinition Height="0.9*"/>
+                </Grid.RowDefinitions>
+                <Image Name="WeatherIcon" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None" Source="{Binding WeatherImageAnimation.CurrentImageSource, UpdateSourceTrigger = PropertyChanged}"/>
+                <Viewbox Grid.Row="1" HorizontalAlignment="Center">
+                    <TextBlock Name="TemperatureTextBlock" Text="{Binding CurrentDay.CurrentWeather.Parameters[temp], UpdateSourceTrigger = PropertyChanged}"  FontFamily="Roboto" FontStyle="Normal" FontWeight="Regular"  Foreground="White"/>
+                </Viewbox>
+                
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Viewbox Grid.Column="0" HorizontalAlignment="Center" Margin="0,0,0,6">
+                        <TextBlock Name="HumidityTextBlock" Text="{Binding CurrentDay.CurrentWeather.Parameters[humidity], UpdateSourceTrigger = PropertyChanged}"  FontFamily="Roboto" FontStyle="Normal" FontWeight="Regular"  Foreground="MintCream"/>
+                    </Viewbox>
+
+                    <Viewbox Grid.Column="1" HorizontalAlignment="Center" Margin="0,0,0,6">
+                        <TextBlock Name="WindTextBlock" Text="{Binding CurrentDay.CurrentWeather.Parameters[speed], UpdateSourceTrigger = PropertyChanged}"  FontFamily="Roboto" FontStyle="Normal" FontWeight="Regular"  Foreground="MintCream"/>
+                    </Viewbox>
+                </Grid>
+            </Grid>
+            
+            <Rectangle Grid.Column="1" Fill="{StaticResource TimeBoxBrush}" StrokeThickness ="0"/>
+            <Grid Grid.Column="1" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1.62*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Viewbox Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20">
+                    <TextBlock Name="TimeBox"  Text="{Binding CurrentDay.Time, UpdateSourceTrigger=PropertyChanged}" FontFamily="Roboto" FontStyle="Normal" FontWeight="Regular"   Foreground="White"/>
+                </Viewbox>
+                    <Grid Grid.Row="0" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="1.62*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Name="ExtraWeatherBox" Grid.Column="0"  ></TextBlock>
+                    <TextBlock Name="DateBox" Grid.Column="1" ></TextBlock>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>
