@@ -21,15 +21,26 @@ namespace WiseWeather
         public struct WeatherData
         {
             public Dictionary<string, string> Parameters { get; set; }
-            /* Current Weather Params:
-             Id
-             Main
-             Description;
-             Temperature
-             TempFeel
-             Pressure
-             Humidity
-             WindSpeed
+            /* Current Weather Params(Key - Value):
+             id - Id of weather:
+                2XX - Thunderstorms
+                3XX - Drizzles
+                5XX - Rains
+                6XX - Snows
+                7XX - Atmosphere
+                800 - Clear Sky
+                    Clouds:
+                801 - Few Clouds
+                802 - Scattered Clouds
+                803 - Broken Clouds
+                804 - Overcast Clouds
+
+             main - Name of weather
+             description - A brief description of weather
+             temp - An average temperature of air
+             feels_like - What this temperature feels like
+             humidity - Humidity of air
+             speed - Speed of wind
             */
         }
         public DateTime Date

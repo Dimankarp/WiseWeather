@@ -147,7 +147,7 @@
     <Resource Include="Images\CloudsSprite.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Images\DarkClouds.png">
+    <Resource Include="Images\DarkCloudsSprite.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

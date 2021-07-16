@@ -48,12 +48,7 @@ namespace WiseWeather
             CurrentDay.TimeThread.IsBackground = true;
             CurrentDay.TimeThread.Start();
 
-
-            BitmapImage image = new BitmapImage();
-            image.BeginInit();
-            image.UriSource = new Uri("pack://application:,,,/Images/ClearSkySprite.png");
-            image.EndInit();
-            WeatherImageAnimation = new Animation(ImageHandler.CropSpriteSheet(image, 150), 0, 100);
+            WeatherImageAnimation = GetWeatherImageAnimation(int.Parse(CurrentDay.CurrentWeather.Parameters["id"]));
             WeatherImageAnimation.Start();
         }
 
@@ -97,6 +92,54 @@ namespace WiseWeather
             weatherData.Parameters.Add("speed", parsedData["wind"]["speed"] + "m/s");
 
             return weatherData;
+        }
+
+        private Animation GetWeatherImageAnimation(int weatherId)
+        {
+            BitmapImage image = new BitmapImage();
+            int spriteChangeDelay = 200; //200 ms is a default
+            image.BeginInit();
+            image.UriSource = new Uri("pack://application:,,,/Images/ClearSkySprite.png");
+            switch (weatherId.ToString()[0])//Weather codes can be found in DayInfo.cs
+            {
+                case '2':
+                    image.UriSource = new Uri("pack://application:,,,/Images/ThunderSprite.png");
+                    break;
+                case '3':
+                    image.UriSource = new Uri("pack://application:,,,/Images/DarkCloudsSprite.png");
+                    break;
+                case '5':
+                    image.UriSource = new Uri("pack://application:,,,/Images/RainSprite.png");
+                    break;
+                case '6':
+                    image.UriSource = new Uri("pack://application:,,,/Images/SnowSprite.png");
+                    break;
+                case '7':
+                    image.UriSource = new Uri("pack://application:,,,/Images/MistSprite.png");
+                    break;
+                case '8':
+                    switch(weatherId.ToString())
+                    {
+                        case "800":
+                            image.UriSource = new Uri("pack://application:,,,/Images/ClearSkySprite.png");
+                            break;
+                        case "801":
+                            image.UriSource = new Uri("pack://application:,,,/Images/SkyCloudsSprite.png");
+                            break;
+                        case "802":
+                            image.UriSource = new Uri("pack://application:,,,/Images/CloudsSprite.png");
+                            break;
+                        case "803":
+                            image.UriSource = new Uri("pack://application:,,,/Images/DarkCloudsSprite.png");
+                            break;
+                        case "804":
+                            image.UriSource = new Uri("pack://application:,,,/Images/DarkCloudsSprite.png");
+                            break;
+                    }
+                    break;
+            }
+            image.EndInit();
+            return new Animation(ImageHandler.CropSpriteSheet(image, 150), 0, spriteChangeDelay);
         }
 
 
