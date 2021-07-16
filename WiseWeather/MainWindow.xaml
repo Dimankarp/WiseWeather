@@ -18,7 +18,7 @@
         <FontFamily x:Key="Font">/Fonts/#Roboto</FontFamily>
         <!--Custom Solid Brushes for Elements-->
         <SolidColorBrush x:Key="TextBoxBrush" Color="#01497C"/>
-        <SolidColorBrush x:Key="WeatherBoxBrush" Color="#013A63"/>
+        <SolidColorBrush x:Key="WeatherBoxBrush" Color="#013a63"/>
         <SolidColorBrush x:Key="ToolBarBrush" Color="#012A4A"/>
         <SolidColorBrush x:Key="TimeBoxBrush" Color="#012F50"/>
 
