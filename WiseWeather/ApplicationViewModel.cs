@@ -34,8 +34,8 @@ namespace WiseWeather
             WebHandler.client = new System.Net.WebClient();
             UserCity = GetUserCity();
 
-            string quoteBlock = GetQuoteBlock(WebHandler.GetString("https://www.brainyquote.com/quote_of_the_day#"));
-            string[] quoteParts = quoteBlock.Split('\n');
+              string quoteBlock = GetQuoteBlock(WebHandler.GetString("https://www.brainyquote.com/quote_of_the_day#"));
+              string[] quoteParts = quoteBlock.Split('\n');
 
             CurrentDay = new DayInfo()
             {
