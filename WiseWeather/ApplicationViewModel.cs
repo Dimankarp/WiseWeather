@@ -32,16 +32,17 @@ namespace WiseWeather
         public ApplicationViewModel()
         {
             WebHandler.client = new System.Net.WebClient();
+            WebHandler.SetSecurityPoints();
             UserCity = GetUserCity();
 
-              string quoteBlock = GetQuoteBlock(WebHandler.GetString("https://www.brainyquote.com/quote_of_the_day#"));
-              string[] quoteParts = quoteBlock.Split('\n');
+              string quoteBlock = GetQuoteBlock(WebHandler.GetString("https://www.quotegarden.com/"));
+              string[] quoteParts = quoteBlock.Split('~');
 
             CurrentDay = new DayInfo()
             {
                 Date = DateTime.Today,
-                Quote = $"\"{quoteParts[2]}\"",
-                QuoteAuthor = $"- {quoteParts[3]}",//The index is 2, because there is an extra \n character before "Quote of The Day"
+                Quote = $"\"{quoteParts[0].Trim()}\"",
+                QuoteAuthor = $"- {quoteParts[1].Replace("&#160;", " ")}",
                 CurrentWeather = GetWeatherData(),
             };
             CurrentDay.TimeThread = new System.Threading.Thread(CurrentDay.UpdateTime);
@@ -57,8 +58,12 @@ namespace WiseWeather
             HtmlDocument document = new HtmlDocument();
             document.LoadHtml(html);
 
-            HtmlNode quoteBlock = document.DocumentNode.SelectNodes("//div[contains(@class, 'grid-item qb clearfix bqQt')]").ToArray()[1];
-            return quoteBlock.InnerText;
+            HtmlNode quoteBlock = document.DocumentNode.SelectNodes("//script[contains(@language, 'JavaScript')]").ToArray().First(); 
+            return quoteBlock.InnerText.Split('\n')[13 + DateTime.Today.Day].Split('"')[1];
+            /*Yes-yes, I know - this is insane! Pure insanity! But I have to change this bloody module because of a damn CloudsFlare and BrainyQuote administration!
+            //If I were to keep using BrainyQuote(which worked just fine until 17.07.21) I would have to deal with CloudsFlare checking systems,
+            //Which are extremely difficult, just insanely hard to deal with(trust me, I've tried multiple solutions of which I didn't understand a thing of)
+            So, I hope this little rant clears some things out and will clear my reputation as an amature programmer.*/
 
         }
 
