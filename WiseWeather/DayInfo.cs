@@ -12,7 +12,7 @@ namespace WiseWeather
 {
     public class DayInfo : INotifyPropertyChanged
     {
-        private DateTime date;
+        private string date;
         private string time;
         private string quote;
         private string quoteAuthor;
@@ -43,7 +43,7 @@ namespace WiseWeather
              speed - Speed of wind
             */
         }
-        public DateTime Date
+        public string Date
         {
             get { return date; }
             set

@@ -15,10 +15,11 @@ namespace WiseWeather
         public DayInfo CurrentDay { get; }
         public Animation WeatherImageAnimation { get; }
         private string userCity;
+        private string userCountry;
         private string OPEN_WEATHER_KEY = "0d2795f4c1fb3b9c8b85e3bff1bc6c46";
         private string IP_DATA_KEY = "07828e29589b8d1376e50764483ad12aa371911cb2e6bf11692c0f7e";
 
-        private string UserCity
+        public string UserCity
         {
             get { return userCity; }
             set
@@ -29,18 +30,29 @@ namespace WiseWeather
 
         }
 
+        public string UserCountry
+        {
+            get { return userCountry; }
+            set
+            {
+                userCountry = value;
+                OnPropertyChanged("UserCountry");
+            }
+
+        }
+
         public ApplicationViewModel()
         {
             WebHandler.client = new System.Net.WebClient();
             WebHandler.SetSecurityPoints();
-            UserCity = GetUserCity();
+            GetUserLocation();
 
               string quoteBlock = GetQuoteBlock(WebHandler.GetString("https://www.quotegarden.com/"));
               string[] quoteParts = quoteBlock.Split('~');
 
             CurrentDay = new DayInfo()
             {
-                Date = DateTime.Today,
+                Date = DateTime.Today.ToString().Split(' ')[0],
                 Quote = $"\"{quoteParts[0].Trim()}\"",
                 QuoteAuthor = $"- {quoteParts[1].Replace("&#160;", " ")}",
                 CurrentWeather = GetWeatherData(),
@@ -48,7 +60,6 @@ namespace WiseWeather
             CurrentDay.TimeThread = new System.Threading.Thread(CurrentDay.UpdateTime);
             CurrentDay.TimeThread.IsBackground = true;
             CurrentDay.TimeThread.Start();
-
             WeatherImageAnimation = GetWeatherImageAnimation(int.Parse(CurrentDay.CurrentWeather.Parameters["id"]));
             WeatherImageAnimation.Start();
         }
@@ -67,7 +78,7 @@ namespace WiseWeather
 
         }
 
-        private string GetUserCity()
+        private void GetUserLocation()
         {
             string userIP = WebHandler.GetUserIP();
 
@@ -76,7 +87,12 @@ namespace WiseWeather
 
             string city = document.DocumentNode.InnerHtml.Trim('{', '}').Split(',')[2].Split(':')[1];
             city = city.Trim(' ', '"');
-            return city;
+            UserCity = city;
+
+            string country = document.DocumentNode.InnerHtml.Trim('{', '}').Split(',')[5].Split(':')[1];
+            country = country.Trim(' ', '"');
+            UserCountry = country;
+
         }
 
         private DayInfo.WeatherData GetWeatherData()
@@ -90,7 +106,7 @@ namespace WiseWeather
             Dictionary<string, Dictionary<string, string>> parsedData = APIParser.Parse(text);
             weatherData.Parameters.Add("id", parsedData["weather"]["id"]);
             weatherData.Parameters.Add("main", parsedData["weather"]["main"]);
-            weatherData.Parameters.Add("description", parsedData["weather"]["description"]);
+            weatherData.Parameters.Add("description", parsedData["weather"]["description"].First().ToString().ToUpper() + parsedData["weather"]["description"].Substring(1));
             weatherData.Parameters.Add("temp", ((Math.Round(float.Parse(parsedData["main"]["temp"]) - 273)).ToString() + "°C"));
             weatherData.Parameters.Add("feels_like", parsedData["main"]["feels_like"]);
             weatherData.Parameters.Add("humidity", parsedData["main"]["humidity"] + "%");

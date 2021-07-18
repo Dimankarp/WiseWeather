@@ -123,7 +123,7 @@
                 <TextBlock  Text="Quote of The Day:"  FontFamily="Roboto" FontStyle="Italic" FontWeight="Thin" FontSize="20" TextWrapping="Wrap"  Foreground="White" TextAlignment="Left"/>
             </Viewbox>
             <Viewbox  Grid.Row="1" Margin="10,0,10,0" HorizontalAlignment="Left">
-                <TextBlock Name="QuoteTextBlock"  Text="{Binding CurrentDay.Quote, UpdateSourceTrigger = PropertyChanged}" FontFamily="Roboto" FontStyle="Italic" FontWeight="Thin" TextWrapping="Wrap"  Foreground="White" />
+                <TextBlock Name="QuoteTextBlock" MaxWidth="300" MinWidth="100" Text="{Binding CurrentDay.Quote, UpdateSourceTrigger = PropertyChanged}" FontFamily="Roboto" FontStyle="Italic" FontWeight="Thin" TextWrapping="Wrap"  Foreground="White" />
             </Viewbox>
             <Viewbox  Grid.Row="2" Margin="0,0,10,0" HorizontalAlignment="Right">
                 <TextBlock Name="QuoteAuthorTextBlock" Grid.Row="2"  Text="{Binding CurrentDay.QuoteAuthor, UpdateSourceTrigger = PropertyChanged}" FontFamily="Roboto" FontStyle="Italic" FontWeight="Thin"  TextWrapping="Wrap"  Foreground="White"/>
@@ -190,8 +190,40 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                         <ColumnDefinition Width="1.62*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Name="ExtraWeatherBox" Grid.Column="0"  ></TextBlock>
-                    <TextBlock Name="DateBox" Grid.Column="1" ></TextBlock>
+                        
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="8*"/>
+                        </Grid.RowDefinitions>
+                        <Viewbox Grid.Row="0"  Margin="10,5,10,5" HorizontalAlignment="Left">
+                            <TextBlock TextWrapping="Wrap"  Name="DescBox" Text="Description:" FontFamily="Roboto" FontStyle="Italic" FontWeight="Thin"  Foreground="White"/>
+                        </Viewbox>
+                        <Viewbox Grid.Row="1" HorizontalAlignment="Center">
+                            <TextBlock HorizontalAlignment="Center"  TextWrapping="Wrap" Width="50" Name="ExtraWeatherBox" Text="{Binding CurrentDay.CurrentWeather.Parameters[description], UpdateSourceTrigger = PropertyChanged}" FontFamily="Roboto" FontStyle="Italic" FontWeight="Thin"  Foreground="White"/>
+                        </Viewbox>
+                    </Grid>
+
+
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="2*"/>
+                        </Grid.RowDefinitions>
+                        <Viewbox Grid.Row="0" HorizontalAlignment="Center" Margin="15,10,15,10" >
+                            <TextBlock Name="CityBox" Text="{Binding UserCity, UpdateSourceTrigger=PropertyChanged}" FontFamily="Roboto" FontStyle="Italic" FontWeight="Thin"  Foreground="White" />
+                        </Viewbox>
+                        <Viewbox Grid.Row="1" HorizontalAlignment="Center" Margin="15,10,15,10" >
+                            <TextBlock Name="CountryBox" Text="{Binding UserCountry, UpdateSourceTrigger=PropertyChanged}" FontFamily="Roboto" FontStyle="Italic" FontWeight="Thin"  Foreground="White"/>
+                        </Viewbox>
+
+                        <Viewbox Grid.Row="2" HorizontalAlignment="Center" Margin="15,10,15,10" >
+                            <TextBlock Name="DateBox"  Text="{Binding CurrentDay.Date , UpdateSourceTrigger=PropertyChanged}" FontFamily="Roboto" FontStyle="Normal" FontWeight="Regular"  Foreground="White"/>
+                        </Viewbox>
+                        
+                    </Grid>
+
                 </Grid>
             </Grid>
         </Grid>
