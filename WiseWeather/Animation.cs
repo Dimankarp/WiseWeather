@@ -41,8 +41,6 @@ namespace WiseWeather
 
             CurrentImageSource = croppedBitmaps[currSpriteIndex];
 
-            animationThread = new Thread(PlayAnimation);
-            animationThread.IsBackground = true;
         }
 
         private  void PlayAnimation()
@@ -58,12 +56,21 @@ namespace WiseWeather
 
         public void Start()
         {
-            animationThread.Start();
+            if (animationThread == null)
+            {
+                animationThread = new Thread(PlayAnimation);
+                animationThread.IsBackground = true;
+                animationThread.Start();
+            }
         }
 
         public void Stop()
         {
-            animationThread.Abort();
+            if (animationThread.IsAlive)
+            {
+                animationThread.Abort();
+                animationThread = null;
+            }
         }
 
 

@@ -41,6 +41,32 @@ namespace WiseWeather
 
         }
 
+        private RelayCommand startAnimationCommand;
+        public RelayCommand StartAnimationCommand
+        {
+            get
+            {
+                return startAnimationCommand ?? (startAnimationCommand = new RelayCommand(obj =>
+                {
+                    WeatherImageAnimation.Start();
+                }));
+            }
+        }
+
+
+        private RelayCommand stopAnimationCommand;
+        public RelayCommand StopAnimationCommand
+        {
+            get
+            {
+                return stopAnimationCommand ?? (stopAnimationCommand = new RelayCommand(obj =>
+                {
+                    WeatherImageAnimation.Stop();
+                }));
+            }
+        }
+
+
         public ApplicationViewModel()
         {
             WebHandler.client = new System.Net.WebClient();
@@ -61,7 +87,6 @@ namespace WiseWeather
             CurrentDay.TimeThread.IsBackground = true;
             CurrentDay.TimeThread.Start();
             WeatherImageAnimation = GetWeatherImageAnimation(int.Parse(CurrentDay.CurrentWeather.Parameters["id"]));
-            WeatherImageAnimation.Start();
         }
 
         private string GetQuoteBlock(string html)

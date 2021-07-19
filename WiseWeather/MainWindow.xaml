@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:local="clr-namespace:WiseWeather"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="550"
@@ -152,7 +153,17 @@
                     <RowDefinition Height="1.8*"/>
                     <RowDefinition Height="0.9*"/>
                 </Grid.RowDefinitions>
-                <Image Name="WeatherIcon" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None" Source="{Binding WeatherImageAnimation.CurrentImageSource, UpdateSourceTrigger = PropertyChanged}"/>
+                <Image Name="WeatherIcon" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None" Source="{Binding WeatherImageAnimation.CurrentImageSource, UpdateSourceTrigger = PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseEnter">
+                            <i:InvokeCommandAction Command="{Binding StartAnimationCommand}" CommandParameter="{Binding WeatherImageAnimation}"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeave">
+                            <i:InvokeCommandAction Command="{Binding StopAnimationCommand}" CommandParameter="{Binding WeatherImageAnimation}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Image>
                 <Viewbox Grid.Row="1" HorizontalAlignment="Center">
                     <TextBlock Name="TemperatureTextBlock" Text="{Binding CurrentDay.CurrentWeather.Parameters[temp], UpdateSourceTrigger = PropertyChanged}"  FontFamily="Roboto" FontStyle="Normal" FontWeight="Regular"  Foreground="White"/>
                 </Viewbox>
