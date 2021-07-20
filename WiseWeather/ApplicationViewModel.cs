@@ -73,8 +73,17 @@ namespace WiseWeather
             WebHandler.SetSecurityPoints();
             GetUserLocation();
 
-              string quoteBlock = GetQuoteBlock(WebHandler.GetString("https://www.quotegarden.com/"));
-              string[] quoteParts = quoteBlock.Split('~');
+            string quoteBlock = GetQuoteBlock(WebHandler.GetString("https://www.quotegarden.com/"));
+            string[] quoteParts = quoteBlock.Split('~');
+            while (quoteParts[0].Contains("&#"))
+            {
+                int startIndex = quoteParts[0].IndexOf("&#"); //Start of &#33; - like string
+                int endIndex = APIParser.FindNextIndex(quoteParts[0], startIndex, ';');//End of &#33; - like string
+
+             quoteParts[0] = quoteParts[0].Replace(quoteParts[0].Substring(startIndex, endIndex - startIndex + 1),
+                Convert.ToChar(int.Parse(quoteParts[0].Substring(startIndex + 2, endIndex - startIndex - 2))).ToString());
+            }
+
 
             CurrentDay = new DayInfo()
             {
@@ -94,7 +103,7 @@ namespace WiseWeather
             HtmlDocument document = new HtmlDocument();
             document.LoadHtml(html);
 
-            HtmlNode quoteBlock = document.DocumentNode.SelectNodes("//script[contains(@language, 'JavaScript')]").ToArray().First(); 
+            HtmlNode quoteBlock = document.DocumentNode.SelectNodes("//script[contains(@language, 'JavaScript')]").ToArray().First();
             return quoteBlock.InnerText.Split('\n')[13 + DateTime.Today.Day].Split('"')[1];
             /*Yes-yes, I know - this is insane! Pure insanity! But I have to change this bloody module because of a damn CloudsFlare and BrainyQuote administration!
             //If I were to keep using BrainyQuote(which worked just fine until 17.07.21) I would have to deal with CloudsFlare checking systems,
@@ -164,7 +173,7 @@ namespace WiseWeather
                     image.UriSource = new Uri("pack://application:,,,/Images/MistSprite.png");
                     break;
                 case '8':
-                    switch(weatherId.ToString())
+                    switch (weatherId.ToString())
                     {
                         case "800":
                             image.UriSource = new Uri("pack://application:,,,/Images/ClearSkySprite.png");

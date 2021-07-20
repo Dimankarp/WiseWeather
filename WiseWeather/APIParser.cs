@@ -30,7 +30,7 @@ namespace WiseWeather
             return APIDictionary;
         }
 
-        private static int FindNextIndex(string text, int startIndex, char character)
+        public static int FindNextIndex(string text, int startIndex, char character)
         {
             for (int i = startIndex + 1; i < text.Length; i++)
             {
