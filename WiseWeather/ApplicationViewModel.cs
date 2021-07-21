@@ -7,18 +7,30 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using HtmlAgilityPack;
 using System.Windows.Media.Imaging;
+using System.Threading;
 
 namespace WiseWeather
 {
     public class ApplicationViewModel : INotifyPropertyChanged
     {
         public DayInfo CurrentDay { get; }
-        public Animation WeatherImageAnimation { get; }
+        public Animation weatherImageAnimation;
         private string userCity;
         private string userCountry;
         private string OPEN_WEATHER_KEY = "0d2795f4c1fb3b9c8b85e3bff1bc6c46";
         private string IP_DATA_KEY = "07828e29589b8d1376e50764483ad12aa371911cb2e6bf11692c0f7e";
 
+
+
+        public Animation WeatherImageAnimation
+        {
+            get { return weatherImageAnimation; }
+            set
+            {
+                weatherImageAnimation = value;
+                OnPropertyChanged("WeatherImageAnimation");
+            }
+        }
         public string UserCity
         {
             get { return userCity; }
@@ -71,46 +83,76 @@ namespace WiseWeather
         {
             WebHandler.client = new System.Net.WebClient();
             WebHandler.SetSecurityPoints();
-            GetUserLocation();
-
-            string quoteBlock = GetQuoteBlock(WebHandler.GetString("https://www.quotegarden.com/"));
-            string[] quoteParts = quoteBlock.Split('~');
-            while (quoteParts[0].Contains("&#"))
-            {
-                int startIndex = quoteParts[0].IndexOf("&#"); //Start of &#33; - like string
-                int endIndex = APIParser.FindNextIndex(quoteParts[0], startIndex, ';');//End of &#33; - like string
-
-             quoteParts[0] = quoteParts[0].Replace(quoteParts[0].Substring(startIndex, endIndex - startIndex + 1),
-                Convert.ToChar(int.Parse(quoteParts[0].Substring(startIndex + 2, endIndex - startIndex - 2))).ToString());
-            }
-
 
             CurrentDay = new DayInfo()
-            {
-                Date = DateTime.Today.ToString().Split(' ')[0],
-                Quote = $"\"{quoteParts[0].Trim()}\"",
-                QuoteAuthor = $"- {quoteParts[1].Replace("&#160;", " ")}",
-                CurrentWeather = GetWeatherData(),
-            };
-            CurrentDay.TimeThread = new System.Threading.Thread(CurrentDay.UpdateTime);
+            { Date = DateTime.Today.ToString().Split(' ')[0] };
+
+            CurrentDay.TimeThread = new Thread(CurrentDay.UpdateTime);
             CurrentDay.TimeThread.IsBackground = true;
             CurrentDay.TimeThread.Start();
+
+            Thread LocationThread = new Thread(SetUserLocation);
+            LocationThread.IsBackground = true;
+            LocationThread.Start();
+
+            Thread QuoteThread = new Thread(SetQuote);
+            QuoteThread.IsBackground = true;
+            QuoteThread.Start();
+
+        }
+
+        private void SetUserLocation()
+        {
+            userCity = "...";
+            userCountry = "...";
+            while (true)
+            {
+                try { GetUserLocation(); }
+                catch { continue; }
+                Thread WeatherThread = new Thread(SetWeatherData);
+                WeatherThread.IsBackground = true;
+                WeatherThread.Start();
+                break;
+            }
+
+        }
+
+        private void SetWeatherData()
+        {
+            while (true)
+            {
+                try { CurrentDay.CurrentWeather = GetWeatherData(); }
+                catch { continue; }
+                break;
+            }
             WeatherImageAnimation = GetWeatherImageAnimation(int.Parse(CurrentDay.CurrentWeather.Parameters["id"]));
         }
 
-        private string GetQuoteBlock(string html)
+        private void SetQuote()
         {
-            HtmlDocument document = new HtmlDocument();
-            document.LoadHtml(html);
+            CurrentDay.Quote = "...";
+            CurrentDay.QuoteAuthor = "...";
+            string quoteBlock;
+            while (true)
+            {
+                try { quoteBlock = GetQuoteBlock(WebHandler.GetString("https://www.quotegarden.com/")); }
+                catch { continue; }
+                string[] quoteParts = quoteBlock.Split('~');
+                while (quoteParts[0].Contains("&#"))
+                {
+                    int startIndex = quoteParts[0].IndexOf("&#"); //Start of &#33; - like string
+                    int endIndex = APIParser.FindNextIndex(quoteParts[0], startIndex, ';');//End of &#33; - like string
 
-            HtmlNode quoteBlock = document.DocumentNode.SelectNodes("//script[contains(@language, 'JavaScript')]").ToArray().First();
-            return quoteBlock.InnerText.Split('\n')[13 + DateTime.Today.Day].Split('"')[1];
-            /*Yes-yes, I know - this is insane! Pure insanity! But I have to change this bloody module because of a damn CloudsFlare and BrainyQuote administration!
-            //If I were to keep using BrainyQuote(which worked just fine until 17.07.21) I would have to deal with CloudsFlare checking systems,
-            //Which are extremely difficult, just insanely hard to deal with(trust me, I've tried multiple solutions of which I didn't understand a thing of)
-            So, I hope this little rant clears some things out and will clear my reputation as an amature programmer.*/
+                    quoteParts[0] = quoteParts[0].Replace(quoteParts[0].Substring(startIndex, endIndex - startIndex + 1),
+                       Convert.ToChar(int.Parse(quoteParts[0].Substring(startIndex + 2, endIndex - startIndex - 2))).ToString());
+                }
+                CurrentDay.Quote = $"\"{quoteParts[0].Trim()}\"";
+                CurrentDay.QuoteAuthor = $"- {quoteParts[1].Replace("&#160;", " ")}";
+                break;
+            }
 
         }
+
 
         private void GetUserLocation()
         {
@@ -127,6 +169,19 @@ namespace WiseWeather
             country = country.Trim(' ', '"');
             UserCountry = country;
 
+        }
+
+        private string GetQuoteBlock(string html)
+        {
+            HtmlDocument document = new HtmlDocument();
+            document.LoadHtml(html);
+
+            HtmlNode quoteBlock = document.DocumentNode.SelectNodes("//script[contains(@language, 'JavaScript')]").ToArray().First();
+            return quoteBlock.InnerText.Split('\n')[13 + DateTime.Today.Day].Split('"')[1];
+            /*Yes-yes, I know - this is insane! Pure insanity! But I have to change this bloody module because of a damn CloudsFlare and BrainyQuote administration!
+            //If I were to keep using BrainyQuote(which worked just fine until 17.07.21) I would have to deal with CloudsFlare checking systems,
+            //Which are extremely difficult, just insanely hard to deal with(trust me, I've tried multiple solutions of which I didn't understand a thing of)
+            So, I hope this little rant clears some things out and will clear my reputation as an amature programmer.*/
         }
 
         private DayInfo.WeatherData GetWeatherData()
@@ -204,6 +259,8 @@ namespace WiseWeather
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
+
+
 
     }
 }

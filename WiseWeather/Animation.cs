@@ -40,7 +40,6 @@ namespace WiseWeather
             SpriteChangeDelay = initialChangeDelay;
 
             CurrentImageSource = croppedBitmaps[currSpriteIndex];
-
         }
 
         private  void PlayAnimation()

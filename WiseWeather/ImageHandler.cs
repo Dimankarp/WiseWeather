@@ -18,6 +18,7 @@ namespace WiseWeather
             for(int i = 0; i < source.PixelWidth / spriteWidth; i++)
             {
                 croppedBitmaps[i] = new CroppedBitmap(source, new System.Windows.Int32Rect(i * 150, 0, 150, 150));
+                croppedBitmaps[i].Freeze(); //Making sprites cross-threaded.
             }
             return croppedBitmaps;
         }
