@@ -262,7 +262,7 @@ namespace WiseWeather
                             image.UriSource = new Uri("pack://application:,,,/Images/ClearSkySprite.png");
                             break;
                         case "801":
-                            image.UriSource = new Uri("pack://application:,,,/Images/SkyCloudsSprite.png");
+                            image.UriSource = new Uri("pack://application:,,,/Images/SkyCloudSprite.png");
                             break;
                         case "802":
                             image.UriSource = new Uri("pack://application:,,,/Images/CloudsSprite.png");
