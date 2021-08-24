@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using HtmlAgilityPack;
 using System.Windows.Media.Imaging;
 using System.Threading;
+using System.Globalization;
 
 namespace WiseWeather
 {
@@ -224,7 +225,7 @@ namespace WiseWeather
             weatherData.Parameters.Add("id", parsedData["weather"]["id"]);
             weatherData.Parameters.Add("main", parsedData["weather"]["main"]);
             weatherData.Parameters.Add("description", parsedData["weather"]["description"].First().ToString().ToUpper() + parsedData["weather"]["description"].Substring(1));
-            weatherData.Parameters.Add("temp", ((Math.Round(float.Parse(parsedData["main"]["temp"]) - 273)).ToString() + "°C"));
+            weatherData.Parameters.Add("temp", ((Math.Round(float.Parse(parsedData["main"]["temp"], NumberFormatInfo.InvariantInfo) - 273)).ToString() + "°C"));
             weatherData.Parameters.Add("feels_like", parsedData["main"]["feels_like"]);
             weatherData.Parameters.Add("humidity", parsedData["main"]["humidity"] + "%");
             weatherData.Parameters.Add("speed", parsedData["wind"]["speed"] + "m/s");
