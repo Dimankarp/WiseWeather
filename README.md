@@ -7,7 +7,7 @@
  a short motivational, but always wise quote!
 
 ## Where do we fetch data?
-The application, obviously, requires an internet connection to function properly and to get all the needed data(otherwise you just get a fanct clock).
+The application, obviously, requires an internet connection to function properly and to get all the needed data(otherwise you just get a fancy clock).
 
 To get current weather, WiseWeather use [OpenWeather API](https://openweathermap.org),
 
@@ -16,12 +16,14 @@ for that matter, WiseWeather also use [IpData API](https://dashboard.ipdata.co)
 
 Finally, WiseWeather gets amazing *Quotes Of The Day* from [The Quote Garden](https://www.quotegarden.com/).
 
+## [WiseWeather v1.0 - Release](https://github.com/Dimankarp/WiseWeather/releases/tag/v1.0)
 ## Features:
 * WiseWeather window is fully resizable(well, within certain boundaries) - so feel free to adjust it's size to your liking.
 
 * More than a 100 frames for weather icon animation! Put your mouse over the image, and it will change it's current state!
 
 ![WiseWeatherAnimation](https://user-images.githubusercontent.com/28807607/126741158-712d1a37-dbff-4dea-8113-246291c711e6.gif)
+
 
 
 
