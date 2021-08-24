@@ -7,7 +7,7 @@
  a short motivational, but always wise quote!
 
 ## Where do we fetch data?
-The application, obviously, requires an internet connection to function properly and to get all the needed data(otherwise you just get a fanct clock).
+The application, obviously, requires an internet connection to function properly and to get all the needed data(otherwise you just get a fancy clock).
 
 To get current weather, WiseWeather use [OpenWeather API](https://openweathermap.org),
 
