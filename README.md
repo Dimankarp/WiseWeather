@@ -16,7 +16,7 @@ for that matter, WiseWeather also use [IpData API](https://dashboard.ipdata.co)
 
 Finally, WiseWeather gets amazing *Quotes Of The Day* from [The Quote Garden](https://www.quotegarden.com/).
 
-## [WiseWeather v1.0 - Release](https://github.com/Dimankarp/WiseWeather/releases/tag/v1.0)
+## [WiseWeather v1.1 - Release](https://github.com/Dimankarp/WiseWeather/releases/tag/v1.1)
 ## Features:
 * WiseWeather window is fully resizable(well, within certain boundaries) - so feel free to adjust it's size to your liking.
 
