@@ -9,6 +9,7 @@ using HtmlAgilityPack;
 using System.Windows.Media.Imaging;
 using System.Threading;
 using System.Globalization;
+using System.Configuration;
 
 namespace WiseWeather
 {
@@ -18,8 +19,8 @@ namespace WiseWeather
         private Animation weatherImageAnimation;
         private string userCity;
         private string userCountry;
-        private string OPEN_WEATHER_KEY = "0d2795f4c1fb3b9c8b85e3bff1bc6c46";
-        private string IP_DATA_KEY = "07828e29589b8d1376e50764483ad12aa371911cb2e6bf11692c0f7e";
+        private string OPEN_WEATHER_KEY = ConfigurationManager.AppSettings.Get("OpenWeatherKey");
+        private string IP_DATA_KEY = ConfigurationManager.AppSettings.Get("IPDataKey");
 
         private List<Thread> LaunchedThreads = new List<Thread>();
 
