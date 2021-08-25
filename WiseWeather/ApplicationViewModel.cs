@@ -101,8 +101,8 @@ namespace WiseWeather
 
         private void DayInitialize()
         {
-            while(LaunchedThreads.Count != 0)
-            { 
+            while (LaunchedThreads.Count != 0)
+            {
                 if (LaunchedThreads.First().IsAlive) LaunchedThreads.First().Abort();
                 LaunchedThreads.Remove(LaunchedThreads.First());
             }
@@ -128,6 +128,10 @@ namespace WiseWeather
             Thread DayCheckThread = new Thread(CheckDayChange);
             DayCheckThread.IsBackground = true;
             DayCheckThread.Start();
+
+            Thread UpdateWeatherThread = new Thread(UpdateWeather);
+            UpdateWeatherThread.IsBackground = true;
+            UpdateWeatherThread.Start();
 
         }
 
@@ -296,6 +300,21 @@ namespace WiseWeather
             }
         }
 
+        private void UpdateWeather()
+        {
+            while (true)
+            {
+                Thread.Sleep(300000);//5 minutes
+                while (true)
+                {
+                    try { CurrentDay.CurrentWeather = GetWeatherData(); }
+                    catch { continue; }
+                    break;
+                }
+                WeatherImageAnimation.Stop();
+                WeatherImageAnimation = GetWeatherImageAnimation(int.Parse(CurrentDay.CurrentWeather.Parameters["id"]));
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName]string prop = "")

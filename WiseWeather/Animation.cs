@@ -38,7 +38,6 @@ namespace WiseWeather
             croppedBitmaps = Bitmaps;
             CurrentSpriteIndex = currSpriteIndex;
             SpriteChangeDelay = initialChangeDelay;
-
             CurrentImageSource = croppedBitmaps[currSpriteIndex];
         }
 
@@ -65,7 +64,7 @@ namespace WiseWeather
 
         public void Stop()
         {
-            if (animationThread.IsAlive)
+            if (animationThread != null && animationThread.IsAlive)
             {
                 animationThread.Abort();
                 animationThread = null;
